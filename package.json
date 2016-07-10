@@ -11,6 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/TheCJGCJG/Google-Photos-Parser.git"
   },
+  "dependencies": {
+    "exiv2": "0.6.2",
+    "shelljs": "0.7.0",
+    "moment": "2.14.1"
+  },
   "author": "Charles Gillham",
   "license": "MIT",
   "bugs": {

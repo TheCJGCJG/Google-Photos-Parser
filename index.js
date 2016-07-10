@@ -6,6 +6,7 @@ var moment = require("moment")
 
 var dirRoot = "/Volumes/256SSD/Takeout/Google Photos/"
 var failed = []
+var success = []
 
 function getSubDirectories(directory) {
   return (ls(directory))
@@ -35,6 +36,8 @@ function processFile(directory, filename, extension) {
       if (!tags["Exif.Photo.DateTimeOriginal"]) {
         updatePhoto(directory, filename)
       } else {
+        //console.log(filename + " is good!")
+        // Need to move this to a seperate directory, methinks
         return true
       }
     } else {
@@ -50,14 +53,14 @@ function updatePhoto(directory, filename) {
   photoInformation = getPhotoInformation(directory, filename)
 
   if (moment(photoInformation["filenameNoExt"]).isValid()) {
-    console.log(moment(photoInformation["filenameNoExt"]).format())
+    setExifData(directory, filename, "DateTimeOriginal", moment(photoInformation["filenameNoExt"]).format("YYYY:MM:DD HH:MM:SS"))
+  } else if (moment(photoInformation["dirName"]).isValid()) {
+    setExifData(directory, filename, {
+      "Exif.Photo.DateTimeOriginal": moment(photoInformation["dirName"]).format("YYYY:MM:DD HH:MM:SS")
+    })
   } else {
-    if (moment(photoInformation["dirName"]).isValid()) {
-      console.log(moment(photoInformation["dirName"]).format())
-    } else {
-      failed.push(directory + filename)
-      return false
-    }
+    console.log("Failed")
+    return false
   }
 
   //console.log(photoInformation)
@@ -67,7 +70,8 @@ function getPhotoInformation(directory, filename) {
   var extension = getExtension(filename)
 
   photoInfo = []
-  photoInfo["filenameNoExt"] = filename.replace("." + extension, '')
+  photoInfo["filenameNoExt"] = filename.replace("." + extension, '').replace(".", ":")
+  //console.log(photoInfo["filenameNoExt"])
 
   dirName = directory.replace(dirRoot,"").replace("/", "")
   dashInstances = (dirName.match(/-/g) || []).length
@@ -80,8 +84,14 @@ function getPhotoInformation(directory, filename) {
   return photoInfo
 }
 
-function setExifData(directory, filename, exifTag, data) {
-
+function setExifData(directory, filename, exifData) {
+  ex.setImageTags(directory + filename, exifData, function(err) {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("Updated: " + directory + filename)
+    }
+  })
 }
 
 function checkDate() {
@@ -99,5 +109,6 @@ directories.forEach(function(dir) {
 })
 
 console.log(failed)
+console.log(success)
 
 
