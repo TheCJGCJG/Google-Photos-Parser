@@ -1,0 +1,20 @@
+{
+  "name": "google-photos-parser",
+  "version": "0.0.1",
+  "description": "JavaScript parser for Google Photos ",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js",
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheCJGCJG/Google-Photos-Parser.git"
+  },
+  "author": "Charles Gillham",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheCJGCJG/Google-Photos-Parser/issues"
+  },
+  "homepage": "https://github.com/TheCJGCJG/Google-Photos-Parser#readme"
+}
